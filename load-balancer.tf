@@ -22,8 +22,20 @@ resource "aws_lb" "app-1-load_balancer" {
   name               = "app-1-lb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = [for subnet in aws_subnet.app-1-subnets : subnet.id]
+  subnets            = [for subnet in aws_subnet.app-1-public-subnets : subnet.id]
   security_groups    = [aws_security_group.load-balancer.id]
+
+  # connection_logs {
+  #   bucket  = aws_s3_bucket.app-1-access-log.id
+  #   prefix  = "lb/connection-log"
+  #   enabled = true
+  # }
+
+  access_logs {
+    bucket  = aws_s3_bucket.app-1-access-log.id
+    prefix  = "lb/access-log"
+    enabled = true
+  }
 
   tags = {
     Environment = "production"

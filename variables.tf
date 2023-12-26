@@ -23,13 +23,25 @@ variable "vpc_cidr" {
   }
 }
 
-variable "subnet_cidrs" {
+variable "subnet_cidrs_private" {
   type    = list(string)
   default = ["10.0.1.0/24", "10.0.2.0/24"]
 
   validation {
     condition = alltrue([
-      for value in var.subnet_cidrs : can(cidrhost(value, 0))
+      for value in var.subnet_cidrs_private : can(cidrhost(value, 0))
+    ])
+    error_message = "Must be valid IPv4 CIDR."
+  }
+}
+
+variable "subnet_cidrs_public" {
+  type    = list(string)
+  default = ["10.0.3.0/24", "10.0.4.0/24"]
+
+  validation {
+    condition = alltrue([
+      for value in var.subnet_cidrs_public : can(cidrhost(value, 0))
     ])
     error_message = "Must be valid IPv4 CIDR."
   }
