@@ -56,6 +56,13 @@ resource "aws_security_group" "load-balancer" {
   }
 
   ingress {
+    description     = "Allow HTTP for load balancer"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ec2_instance.id]
+  }
+  ingress {
     description      = "Allow HTTP"
     from_port        = 80
     to_port          = 80
